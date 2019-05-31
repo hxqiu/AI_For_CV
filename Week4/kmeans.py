@@ -1,6 +1,7 @@
 import random
 import numpy as np
 
+np.random.seed(2)
 data = np.random.rand(100, 2)
 
 def get_dis(data1, data2):
@@ -14,18 +15,20 @@ def kmeans(k, data_list):
     for idx in idx_list:
         centroids.append(data_list[idx])
 
-    is_coverage = True
-    while is_coverage:
+    is_coverage = False
+    while not is_coverage:
         # 2 for each data ,calculate which class it should be in
         classes = [[] for i in range(k)]
         for i in range(len(data_list)):
-            data_class = 0
-            min_dis = 10000.0
-            for j in range(len(centroids)):
-                dis = get_dis(data_list[i], centroids[j])
-                if(dis < min_dis):
-                    min_dis = dis
-                    data_class = j
+            dis = list(map(lambda x: get_dis(data_list[i], x), centroids))
+            data_class = dis(min(dis))
+            # data_class = 0
+            # min_dis = 10000.0
+            # for j in range(len(centroids)):
+            #     dis = get_dis(data_list[i], centroids[j])
+            #     if(dis < min_dis):
+            #         min_dis = dis
+            #         data_class = j
             classes[data_class].append(data_list[i])
         # 3 recal center of every k classes
         new_centroids = []
@@ -37,6 +40,6 @@ def kmeans(k, data_list):
         # 4 repeat 2~3 until coverage to required range
         print('total:{:.8f}'.format(update_vol))
         if update_vol < 0.01:
-            is_coverage = False
+            is_coverage = True
 
 kmeans(10, data)
