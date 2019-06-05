@@ -1,4 +1,4 @@
-#coding: utf-8
+﻿#coding: utf-8
 import numpy as np
 import cv2
 
@@ -11,8 +11,8 @@ import cv2
 # 7. 将有图像拷贝到特定位置完成拼接
 
 hessian = 400
-leftgray = cv2.imread('1.jpg')
-rightgray = cv2.imread('2.jpg')
+leftgray = cv2.imread('r1.jpg')
+rightgray = cv2.imread('r2.jpg')
 
 
 detector = sift = cv2.xfeatures2d.SIFT_create(hessian)  # 将Hessian Threshold设置为400,阈值越大能检测的特征就越少
@@ -41,11 +41,10 @@ h1,w1=rightgray.shape[:2]
 shft=np.array([[1.0,0,w],[0,1.0,0],[0,0,1.0]])
 M=np.dot(shft,H[0])            #获取左边图像到右边图像的投影映射关系
 dst_corners=cv2.warpPerspective(leftgray,M,(w*2,h))#透视变换，新图像可容纳完整的两幅图
-cv2.imshow('tiledImg1',dst_corners)   #显示，第一幅图已在标准位置
+cv2.imshow('img_after_stitch',dst_corners)   #显示，第一幅图已在标准位置
 dst_corners[0:h,w:w*2]=rightgray[0:h,0:w]  #将第二幅图放在右侧
-#cv2.imwrite('tiled.jpg',dst_corners)
+# cv2.imwrite('img_after_stitch.jpg', dst_corners)
 
-# cv2.imshow('tiledImg',dst_corners)
 cv2.imshow('leftgray',leftgray)
 cv2.imshow('rightgray',rightgray)
 cv2.waitKey()
