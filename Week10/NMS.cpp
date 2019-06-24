@@ -37,6 +37,7 @@ float cal_IoU(BoundingBox& BoxA,
 	float area_of_union = BoxA.area() + BoxB.area() - area_of_intersection;
 	return area_of_intersection / area_of_union;
 }
+
 vector<vector<float>>NMS(vector<vector<float>>lists, float thre) {
 	vector<BoundingBox> B;
 	vector<float> S;
