@@ -18,7 +18,7 @@ public:
 
 double cal_IoU(BoundingBox& BoxA,
 	           BoundingBox& BoxB) {
-	double intersection_x = min(BoxA.x + BoxA.w, BoxA.x + BoxB.w) - max(BoxA.x, BoxB.x);
+	double intersection_x = min(BoxA.x + BoxA.w, BoxB.x + BoxB.w) - max(BoxA.x, BoxB.x);
 	double intersection_y = min(BoxA.y + BoxA.h, BoxB.y + BoxB.h) - max(BoxA.y, BoxB.y);
 	if (intersection_x < 0.0 || intersection_y < 0.0)
 		return 0.0;
@@ -26,10 +26,38 @@ double cal_IoU(BoundingBox& BoxA,
 	double area_of_union = BoxA.area + BoxB.area - area_of_intersection;
 	return area_of_intersection/ area_of_union;
 }
+vector<vector<float>>NMS(vector<vector<float>>lists, float thre) {
+	vector<BoundingBox> B;
+	vector<double> S;
+	vector<vector<float>> ret;
+	vector<double> result_S;
+	for (list : lists) {
+		B.push_back(BoundingBox(list[0], list[1], list[2], list[3]));
+		S.push_back(list[4]);
+	}
+	BoundingBox M;
+	while (!B.empty()) {
+		auto max_element_it = max_element(S.begin(), S.end());
+		int max_element_ind = max_element_it - S.begin();
+		M = B[max_element_ind];
+		D.push_back(M);
+		result_S.push_back(S[max_element_ind])
+		B.erase(B.begin() + max_element_ind);
+		S.erase(S.begin() + max_element_ind);
+		for (int i = 0; i < B.size(); i++) {
+			if (cal_IoU(B[i], M) > thre) {
+				B.erase(B.begin() + i);
+				S.erase(S.begin() + i);
+				--i;
+			}
+		}
+	}
+}
 void NMS(vector<BoundingBox> &B, 
 		 vector<double> &S,
 		 double threshold,
-	     vector<BoundingBox> &D) {
+	     vector<BoundingBox> &D,
+		 vector<double> &result_S) {
 	BoundingBox M;
 	while (!B.empty()) {
 		auto max_element_it = max_element(S.begin(), S.end());
